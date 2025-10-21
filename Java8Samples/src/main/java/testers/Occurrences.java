@@ -1,8 +1,6 @@
 package testers;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -32,7 +30,8 @@ public class Occurrences {
 
         System.out.print("STR MAP-" + occurrences1);*/
 
-        stringOcurences();
+//        stringOcurences();
+        getStringOccurence();
     }
 
     public static void java8IntOccurence() {
@@ -76,17 +75,18 @@ public class Occurrences {
         Map<Character, Long> counts = null;
 
         for (int i = 0; i < str.length(); i++) {
-//            if (str.charAt(i) == c) {
-//                count++;
-//            }
 
             if (h.containsKey(str.charAt(i))) {
                 h.put(str.charAt(i), h.get(str.charAt(i)) + 1);
             } else {
                 h.put(str.charAt(i), 1);
             }
+        }
 
-
+        for(char x: str.toCharArray()){
+            if(h.containsKey(x)){
+                h.put(x,h.getOrDefault(x,1) + 1);
+            }
         }
 
         counts = str.chars()
@@ -98,6 +98,13 @@ public class Occurrences {
         System.out.println("map j8-" + counts);
         System.out.println("count of {c}" + count + "\n map-" + h);
 
+    }
+
+    private static void getStringOccurence(){
+        String str= "My name is Pelican";
+        Set<Character> characterSet = new HashSet<>();
+        List<Character> characterList = str.chars().mapToObj(e -> (char) e).filter(characterSet::add).collect(Collectors.toList());
+        System.out.println("characterList::" + characterList);
     }
 }
 
