@@ -3,7 +3,8 @@
 *.iml
 .idea/
 ./Samples8.iml
-./target
+*./target
+*.lst
 
 # Log file
 *.log

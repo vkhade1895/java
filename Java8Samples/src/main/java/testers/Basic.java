@@ -18,7 +18,8 @@ public class Basic {
         List<String> collect = lists.stream().flatMap(e -> e.stream()).collect(Collectors.toList());
         collect.forEach(System.out::println);
         //        palindrome();
-        reverseLinkedList();
+//        reverseLinkedList();
+        reverseString();
     }
 
     private static void reverseLinkedList() {
@@ -47,6 +48,16 @@ public class Basic {
             System.out.println("String is not a palindrome:" + s1);
         }
         ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap();
+    }
+
+    private static void reverseString(){
+        String str ="mystring";
+
+        String c = "";
+        for (int i = str.length()-1; i >=0; i--) {
+            c = c + str.charAt(i) ;
+        }
+        System.out.println("reversed:" + c);
     }
 
 }
