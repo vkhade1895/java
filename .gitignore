@@ -6,7 +6,7 @@
 .slingshot/*
 .target/
 target/
-Java8Samples/target/
+Java8Samples/target/*
 
 # Log file
 *.log
