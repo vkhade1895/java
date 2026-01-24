@@ -3,8 +3,8 @@
 *.iml
 .idea/
 ./Samples8.iml
-*./target
-*.lst
+.slingshot/*
+.target/
 
 # Log file
 *.log
