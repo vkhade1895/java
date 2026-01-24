@@ -4,9 +4,8 @@
 .idea/
 ./Samples8.iml
 .slingshot/*
-.target/
 target/
-Java8Samples/target/*
+.settings/
 
 # Log file
 *.log
