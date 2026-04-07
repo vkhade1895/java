@@ -16,11 +16,19 @@ public class MahDay {
 		// sort elements in a hashmap based on keys
 		Map<Integer, String> map = new HashMap<>();
 		map.put(9, "a");
-		map.put(8, "c");
+		map.put(118, "c");
 		map.put(4, "z");
 
 		Map<Integer, String> collect = map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-		
+		Map<Integer, String> sortedByKeys = map.entrySet().stream()
+				.sorted(Map.Entry.comparingByKey())
+				.collect(Collectors.toMap(
+						Map.Entry::getKey,
+						Map.Entry::getValue,
+						(e1, e2) -> e1,
+						LinkedHashMap::new
+				));
+		System.out.println("my map in ascending keys::"+ sortedByKeys );
 		System.out.println("my map::"+ collect );
 		TreeMap treeMap = new TreeMap<>(map);
 		System.out.println("treemap:" + treeMap);
@@ -30,7 +38,7 @@ public class MahDay {
 		map2.put(2, "c");
 		map2.put(3, "b");
 		
-		Map<Integer, String> collect2 = map2.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a1,b) -> a1,LinkedHashMap::new));
+		Map<Integer, String> collect2 = map2.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a1,b) -> a1,LinkedHashMap::new));
 		System.out.println("collect2::" + collect2);
 	}
 

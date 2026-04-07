@@ -11,14 +11,13 @@ import java.util.stream.Stream;
 public class Trying {
 
 	public static void main(String[] args) {
-//		int m1 = m1();
-//		System.out.println("op:" + m1);
+		int m1 = m1();
+		System.out.println("op:" + m1);
 //		m2();
-        m3();
+//        m3();
 	}
 
 	private static int m1() {
-		// TODO Auto-generated method stub
 		try {
 			throw new Exception("a");
 		} catch (Exception e) {

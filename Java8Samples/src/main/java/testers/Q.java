@@ -69,7 +69,7 @@ public class Q {
 		String pangram1 = "The quick brown fox jumps over the lazy dog"; // A classic pangram
 		String pangram2 = "Pack my box with five dozen liquor jugs"; // Another pangram
 		String notPangram = "Hello world"; // Not a pangram
-		testPanagram(notPangram);
+		testPanagram(pangram1);
 	}
 
 	private static void testPanagram(String str) {
@@ -92,7 +92,7 @@ public class Q {
 //		System.out.println("'" + str + "' is a pangram: " + isPangram(pangram2));
 //		System.out.println("'" + str + "' is a pangram: " + isPangram(notPangram));
 		// A string is a pangram if the set of unique letters contains all 26 English alphabets
-		System.out.println("--" + uniqueLetters.size());
+		System.out.println("panagram--" + uniqueLetters.size());
 
 	}
 

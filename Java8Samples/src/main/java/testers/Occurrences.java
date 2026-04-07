@@ -103,7 +103,7 @@ public class Occurrences {
     private static void getStringOccurence(){
         String str= "My name is Pelican";
         Set<Character> characterSet = new HashSet<>();
-        List<Character> characterList = str.chars().mapToObj(e -> (char) e).filter(characterSet::add).collect(Collectors.toList());
+        List<Character> characterList = str.chars().mapToObj(e -> (char) e).filter(characterSet::add).toList();
         System.out.println("characterList::" + characterList);
     }
 }
