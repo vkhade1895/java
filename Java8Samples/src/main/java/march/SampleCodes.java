@@ -123,4 +123,15 @@ public class SampleCodes {
 
         System.out.println("array op::" + Arrays.toString(result));
     }
+
+    private static void findKthRepeatedElementInArray(){
+        int k = 2;
+        int[] array={1,2,1,2,3,4};
+        // output = 4
+     }
+
+     private static void findFirstNonRepeatedCharacterInAString(){
+        String str = "swiss";
+//        op = 'w'
+     }
 }
