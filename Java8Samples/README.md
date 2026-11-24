@@ -15,6 +15,14 @@ mvn -q compile
 java -cp target/classes arrays.TwoSum
 ```
 
+To start the Spring Boot app, run `JavaSamplesApplication` in IntelliJ, or from a terminal in the `Java8Samples` folder:
+
+```bash
+mvn spring-boot:run
+```
+
+Then open http://localhost:8080/hello. Stop the app with Ctrl+C.
+
 ## Packages
 
 | Package | What's inside |
@@ -30,6 +38,7 @@ java -cp target/classes arrays.TwoSum
 | [`concurrency`](#concurrency) | Threads: CompletableFuture, virtual threads, locks and deadlock, wait and notify, latches and barriers (8 classes) |
 | [`exceptions`](#exceptions) | try / catch / finally, try-with-resources and custom exceptions (2 classes) |
 | [`design`](#design) | SOLID principles, and the Singleton and Builder patterns (3 classes) |
+| [`springboot`](#springboot) | A small Spring Boot 4.2 web app: the main class and one REST endpoint (2 classes) |
 | [`model`](#model) | Shared records used by the employee examples (2 classes) |
 
 ## All classes
@@ -175,6 +184,13 @@ java -cp target/classes arrays.TwoSum
 | [BuilderPattern](src/main/java/design/BuilderPattern.java) | The Builder pattern: build an object with many optional fields step by step, with readable code instead of one long constructor. | Builder pattern, telescoping constructor, method chaining, fluent API, immutable object, Lombok @Builder | 2026-11-24 | - |
 | [Singletons](src/main/java/design/Singletons.java) | Three thread-safe ways to write a Singleton (a class that has only one object). | Singleton, double-checked locking, volatile, holder class, enum singleton | 2026-11-24 | - |
 | [SolidPrinciples](src/main/java/design/SolidPrinciples.java) | The five SOLID principles. Each one has a small example that breaks the rule, the problem that causes, and the same example written the right way. | SOLID, single responsibility (SRP), open/closed (OCP), Liskov substitution (LSP), interface segregation (ISP), dependency inversion (DIP), Strategy pattern, constructor injection | 2026-11-24 | - |
+
+### springboot
+
+| Class | What it shows | Keywords | First written | Old name |
+|---|---|---|---|---|
+| [HelloController](src/main/java/springboot/HelloController.java) | A small REST endpoint to see the Spring Boot app working: GET /hello returns a short text. | @RestController, @GetMapping, REST endpoint, Spring MVC | 2026-11-25 | - |
+| [JavaSamplesApplication](src/main/java/springboot/JavaSamplesApplication.java) | The starting point of a small Spring Boot web app. Run it, then open http://localhost:8080/hello in a browser. | Spring Boot, @SpringBootApplication, SpringApplication.run, auto-configuration, component scan, embedded Tomcat | 2026-11-25 | - |
 
 ### model
 

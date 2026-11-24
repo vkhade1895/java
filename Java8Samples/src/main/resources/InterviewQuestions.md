@@ -7,7 +7,7 @@
 - [JavaVersions.md](JavaVersions.md): what changed in Java 8, 11, 17, 21 and 25, with code
 
 The code is in `Java8Samples/src/main/java/`:
-`oop`, `functional` (interfaces and lambdas), `modern` (newer Java features, from Java 10 to 21), `streams`, `arrays`, `strings`, `datastructures` (stack, queue, linked list, tree, LRU cache), `numbers`, `concurrency`, `exceptions`, `design` (SOLID and design patterns) and `model` (shared records). [README.md](../../../README.md) lists every class with its keywords and the date it was first written.
+`oop`, `functional` (interfaces and lambdas), `modern` (newer Java features, from Java 10 to 21), `streams`, `arrays`, `strings`, `datastructures` (stack, queue, linked list, tree, LRU cache), `numbers`, `concurrency`, `exceptions`, `design` (SOLID and design patterns), `springboot` (a small Spring Boot web app) and `model` (shared records). [README.md](../../../README.md) lists every class with its keywords and the date it was first written.
 
 ---
 
@@ -426,7 +426,7 @@ The `pom.xml` compiles for Java 21.
 For a simple side-by-side guide to Java 8, 11, 17, 21 and 25 with code examples, see [JavaVersions.md](JavaVersions.md).
 
 **Q97. What's inside `pom.xml`?**
-`groupId` (the organisation), `artifactId` (the project name) and `version` (`1.0-SNAPSHOT` means "still in development"), plus properties: Java version 21 (`maven.compiler.release`, which also stops you from using methods that only newer Java versions have) and UTF-8 encoding. Common commands: `mvn compile`, `mvn test`, `mvn package`.
+A `parent` (`spring-boot-starter-parent` 4.2.0, which picks matching versions of all the Spring libraries and plugins), then `groupId` (the organisation), `artifactId` (the project name) and `version` (`1.0-SNAPSHOT` means "still in development"). Properties: `java.version` 21 (the parent turns it into `maven.compiler.release`, which also stops you from using methods that only newer Java versions have) and UTF-8 encoding. One dependency, `spring-boot-starter-webmvc` (Spring MVC and an embedded Tomcat, with no version because the parent sets it), and the `spring-boot-maven-plugin` (for `mvn spring-boot:run`, and a runnable jar from `mvn package`). Common commands: `mvn compile`, `mvn test`, `mvn package`, `mvn spring-boot:run`.
 
 ---
 

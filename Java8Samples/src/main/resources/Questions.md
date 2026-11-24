@@ -198,6 +198,7 @@ Higher isolation levels increase consistency but reduce concurrent write through
   - `@ConditionalOnProperty`: a property has a certain value.
 - **Example:** add `spring-boot-starter-data-jpa`, a database driver and the database URL (`spring.datasource.url`, plus the username and password), and Spring Boot creates the `DataSource`, the `EntityManagerFactory` and the transaction manager for you. If you define your own `DataSource` bean, Spring Boot's one backs off.
 - **Useful tips:** start the app with `--debug` to print the conditions evaluation report (which auto-configurations ran, and why). Turn one off with `@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)`.
+- See the code: `springboot/JavaSamplesApplication.java`. Start it with `mvn spring-boot:run`, then open http://localhost:8080/hello.
 
 ### 26. How do you keep microservices working when the services they call fail or are slow?
 
