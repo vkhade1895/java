@@ -4,9 +4,10 @@
 - [Part 2: Coding questions](#part-2-coding-questions): the problem in simple words, an example, and how to solve it
 - [Part 3: Spot the bug](#part-3-spot-the-bug): mistakes that were in this repo's code, now fixed (good practice)
 - [Part 4: Advanced topics and system design](#part-4-advanced-topics-and-system-design): short version of [Questions.md](Questions.md)
+- [JavaVersions.md](JavaVersions.md): what changed in Java 8, 11, 17, 21 and 25, with code
 
 The code is in `Java8Samples/src/main/java/`:
-`oop`, `functional` (interfaces and lambdas), `streams`, `arrays`, `strings`, `datastructures` (stack, linked list, LRU cache), `numbers`, `concurrency`, `exceptions` and `model` (shared records). [README.md](../../../README.md) lists every class with its keywords and the date it was first written.
+`oop`, `functional` (interfaces and lambdas), `modern` (newer Java features, from Java 10 to 21), `streams`, `arrays`, `strings`, `datastructures` (stack, queue, linked list, tree, LRU cache), `numbers`, `concurrency`, `exceptions`, `design` (SOLID and design patterns) and `model` (shared records). [README.md](../../../README.md) lists every class with its keywords and the date it was first written.
 
 ---
 
@@ -131,7 +132,7 @@ The fields are `private final` and there are no setters. But it's only shallow: 
 It can't extend anything (it already extends `java.lang.Record` and is `final`). It can implement interfaces and add methods and static fields, but no extra instance fields.
 
 **Q26. What is a compact constructor?**
-A constructor without the parameter list, used for checks:
+A constructor without the parameter list, used for checks ([RecordWithChecks.java](../java/modern/RecordWithChecks.java)):
 
 ```java
 record Department(String name, int id) {
@@ -297,7 +298,7 @@ It uses a `HashMap` inside, with the elements as keys. `add` returns `false` if 
 Return a negative number, zero or a positive number. Return 0 for equal items. `compare(a, b)` and `compare(b, a)` must have opposite signs. Breaking these rules can make sorting throw "Comparison method violates its general contract!". Use `Integer.compare(b, a)` or `Comparator.reverseOrder()` instead of hand-written if/else. (See bug B6.)
 
 **Q68. What is `ConcurrentModificationException`?**
-You get it when you add or remove items while looping over a collection with for-each (the iterator is "fail-fast"). Use `iterator.remove()` or `list.removeIf(...)` instead.
+You get it when you add or remove items while looping over a collection with for-each (the iterator is "fail-fast"). Use `iterator.remove()` or `list.removeIf(...)` instead. See [ModifyListWhileLooping.java](../java/datastructures/ModifyListWhileLooping.java).
 
 **Q69. Big-O cheat sheet**
 
@@ -345,7 +346,7 @@ Only when the JVM stops: `System.exit()`, a crash, or the machine powering off. 
 - `Error` (like `OutOfMemoryError`): serious JVM problems. Don't catch them.
 
 **Q79. What is try-with-resources?**
-`try (var in = new FileInputStream(file)) { ... }` closes the resource automatically, even if an exception happens. The resource must implement `AutoCloseable`.
+`try (var in = new FileInputStream(file)) { ... }` closes the resource automatically, even if an exception happens. The resource must implement `AutoCloseable`. See [TryWithResources.java](../java/exceptions/TryWithResources.java).
 
 **Q80. `throw` vs `throws`?**
 `throw` actually throws an exception object. `throws` in a method signature says which checked exceptions the method may throw.
@@ -386,7 +387,7 @@ Something like `java.util.stream.SortedOps$OfRef@1b6d3586`: the stream object, n
 A Future you can chain: start work in the background and say what to do with the result, without blocking. `supplyAsync(() -> work())` runs on the common ForkJoin pool unless you pass your own executor.
 
 **Q90. How do you combine two background results (the ParallelProductAndSum task)?**
-`f1.thenCombine(f2, Integer::sum).join()`. For many futures, use `CompletableFuture.allOf(...)`.
+`f1.thenCombine(f2, Integer::sum).join()`. For many futures, use `CompletableFuture.allOf(...)`: see [CallServicesInParallel.java](../java/concurrency/CallServicesInParallel.java).
 
 **Q91. `thenApply` vs `thenCompose` vs `thenAccept`?**
 `thenApply` transforms the result (like `map`). `thenCompose` is for a next step that itself returns a `CompletableFuture` (like `flatMap`; it avoids nested futures). `thenAccept` uses the result and returns nothing.
@@ -416,6 +417,8 @@ The `pom.xml` compiles for Java 21.
 **Q96. What's new in Java 17 and Java 21 (both long-term support)?**
 - Up to 17: switch expressions (14), text blocks (15), records and pattern matching for `instanceof` (16), sealed classes (17).
 - 21: virtual threads, pattern matching for `switch`, record patterns, sequenced collections (`getFirst()`, `getLast()`, `reversed()`) and generational ZGC.
+
+For a simple side-by-side guide to Java 8, 11, 17, 21 and 25 with code examples, see [JavaVersions.md](JavaVersions.md).
 
 **Q97. What's inside `pom.xml`?**
 `groupId` (the organisation), `artifactId` (the project name) and `version` (`1.0-SNAPSHOT` means "still in development"), plus properties: Java version 21 (`maven.compiler.source` and `maven.compiler.target`) and UTF-8 encoding. Common commands: `mvn compile`, `mvn test`, `mvn package`.
@@ -600,7 +603,7 @@ Every `(`, `{` and `[` must be closed by the same type, in the right order.
 Build a cache with a fixed capacity. `get(key)` returns the value, or -1 if the key isn't there. `put(key, value)` adds or updates a key. When the cache is full, remove the least recently used key. Both operations must be O(1), and you can't extend any Map class.
 - Example (capacity 2): put(1,1), put(2,2), get(1) → 1, put(3,3) removes key 2, get(2) → -1, put(4,4) removes key 1, get(1) → -1, get(3) → 3, get(4) → 4
 - Idea: a `HashMap` from key to node, plus a doubly linked list with the most recent node at the tail and the oldest at the head. Dummy head and tail nodes avoid null checks. On get or put, move the node to the tail. When the cache is full, remove the node after the head.
-- Follow-ups: with `LinkedHashMap`, use `new LinkedHashMap<>(cap, 0.75f, true)` and override `removeEldestEntry`. For a thread-safe version, put a lock around get and put.
+- Follow-ups: with `LinkedHashMap`, use `new LinkedHashMap<>(cap, 0.75f, true)` and override `removeEldestEntry` ([LRUCacheWithLinkedHashMap.java](../java/datastructures/LRUCacheWithLinkedHashMap.java)). For a thread-safe version, put a lock around get and put.
 
 ### Streams on objects (Employee records)
 
@@ -672,6 +675,120 @@ Put all the 0s before all the 1s, in place.
 
 The other coding questions from Questions.md were already in the code, and now also show its version: Two Sum (C1), second highest with a repeated maximum (C4), longest substring with a last-seen map (C14), group anagrams with streams (C16) and first non-repeated character with streams (C20).
 
+### Interview favourites (added on 2026-11-24)
+
+**C50. Shapes with a sealed interface and `switch`** ([ShapeArea.java](../java/modern/ShapeArea.java))
+- Example: `area(new Rectangle(2, 3))` → `6.0`, and `describe(new Square(20))` → `"a big square"`
+- Idea: the sealed interface lists every kind of shape, so the `switch` needs no `default`. Record patterns read the fields, and `when` adds a condition.
+
+**C51. Run thousands of waiting tasks with virtual threads** ([VirtualThreadsDemo.java](../java/concurrency/VirtualThreadsDemo.java))
+- Example: 10,000 tasks that each wait 200 ms finish in about 0.2 seconds. 1,000 tasks on 100 normal threads take about 2 seconds.
+- Idea: `Executors.newVirtualThreadPerTaskExecutor()`. Limit calls to a slow service with a `Semaphore`.
+
+**C52. Two threads print odd and even numbers in turn** ([OddEvenPrinter.java](../java/concurrency/OddEvenPrinter.java))
+- Example: `odd thread: 1`, `even thread: 2`, ... up to 10
+- Idea: one shared lock. A thread prints when it is its turn and calls `notify()`; otherwise it calls `wait()`.
+
+**C53. Producer-consumer** ([ProducerConsumer.java](../java/concurrency/ProducerConsumer.java))
+- Example: the consumer takes 1, 2, 3, 4, 5 in order
+- Idea: `BlockingQueue.put()` and `take()` wait for you. With `wait()` and `notifyAll()`, always check the condition in a `while` loop.
+
+**C54. Deadlock: make it, find it, fix it** ([DeadlockDemo.java](../java/concurrency/DeadlockDemo.java))
+- Example: `Deadlocked threads found: 2`
+- Idea: two threads take two locks in the opposite order. Find it with `ThreadMXBean` or a thread dump (`jstack`). Fix it by always taking the locks in the same order, or with `tryLock` and a timeout.
+
+**C55. Many threads adding to one counter** ([CounterRace.java](../java/concurrency/CounterRace.java))
+- Example: `volatile` usually gives less than 400000 (a different number each run); `AtomicInteger` and `synchronized` always give 400000
+- Idea: `count++` is read, add, write. `volatile` doesn't make it one step. Use `AtomicInteger` or `synchronized`.
+
+**C56. Thread-safe Singleton** ([Singletons.java](../java/design/Singletons.java))
+- Idea: double-checked locking with `volatile`, a holder class, or an `enum` (the simplest).
+
+**C57. Immutable class, equals and hashCode** ([ImmutableKey.java](../java/oop/ImmutableKey.java))
+- Example: a key without `equals` and `hashCode` can't be found again: `null`
+- Idea: a final class, private final fields, no setters, and copies of lists you receive. Equal objects need the same hash code.
+
+**C58. Nth highest salary** ([NthHighestSalary.java](../java/streams/NthHighestSalary.java))
+- Example: salaries 900, 700, 900, 500, 700 → 2nd highest is `700`, earned by `[Ravi, Sara]`
+- Idea: `map(Employee::salary).distinct().sorted(Comparator.reverseOrder()).skip(n - 1).findFirst()`
+
+**C59. Employee stream questions** ([EmployeeGroupingAndSorting.java](../java/streams/EmployeeGroupingAndSorting.java))
+- Example: count per department → `{HR=2, IT=2, Ops=1}`
+- Idea: `groupingBy` with `counting()` or `mapping()`, `partitioningBy`, `joining(", ", "[", "]")`, and `Comparator.comparing(...).thenComparing(...)`.
+
+**C60. Your own linked list** ([SinglyLinkedList.java](../java/datastructures/SinglyLinkedList.java))
+- Example: `1 -> 2 -> 3 -> 4 -> 5` reversed is `5 -> 4 -> 3 -> 2 -> 1`, the middle is `3`, and removing the 2nd from the end gives `1 -> 2 -> 3 -> 5`
+- Idea: prev/curr/next pointers to reverse, slow and fast pointers for the middle, and a dummy node to remove a node.
+
+**C61. Binary tree basics** ([BinaryTree.java](../java/datastructures/BinaryTree.java))
+- Example: inorder `[2, 3, 4, 5, 7, 8, 9]`, height `3`, and the lowest common ancestor of 2 and 9 is `5`
+- Idea: recursion for the three orders and the height, a queue for level order, and min/max limits for the BST check.
+
+**C62. SOLID principles** ([SolidPrinciples.java](../java/design/SolidPrinciples.java))
+- Example: `BadSquare` extends `BadRectangle`, so setting the width to 5 and the height to 4 gives an area of `16`, not `20`
+- Idea: one job per class (S), add new classes instead of editing old code (O), a child class must work wherever its parent works (L), small interfaces (I), and depend on interfaces passed in through the constructor (D). Each part shows code that breaks the rule and code that follows it.
+
+**C63. A record that checks its values** ([RecordWithChecks.java](../java/modern/RecordWithChecks.java))
+- Example: `new Payment("Ravi", -5, List.of())` throws `amount must be above 0: -5`
+- Idea: a compact constructor (no parameter list) checks or changes the values before the fields are set. `List.copyOf` keeps the record immutable.
+
+**C64. `var`, switch expressions and text blocks** ([NewerSyntax.java](../java/modern/NewerSyntax.java))
+- Idea: `var` for local variables with an obvious type, `case SATURDAY, SUNDAY -> "Weekend"` with no `break`, `yield` to return a value from a block, and `"""` for strings over several lines.
+
+**C65. First, last and reversed (sequenced collections)** ([SequencedCollectionsDemo.java](../java/modern/SequencedCollectionsDemo.java))
+- Example: for `[1, 2, 3]`, `getFirst()` is `1`, `getLast()` is `3` and `reversed()` is `[3, 2, 1]`
+- Idea: Java 21 adds `getFirst()`, `getLast()` and `reversed()` to lists and to `LinkedHashSet`, and `firstEntry()`, `lastEntry()` and `reversed()` to `LinkedHashMap`.
+
+**C66. CountDownLatch and CyclicBarrier** ([LatchAndBarrier.java](../java/concurrency/LatchAndBarrier.java))
+- Idea: a latch waits for N `countDown()` calls and can be used only once. A barrier makes N threads wait for each other and can be used again. A `Semaphore` limits how many threads can run a piece of code at the same time (see C51).
+
+**C67. Call 3 services at once, with a timeout and fallbacks** ([CallServicesInParallel.java](../java/concurrency/CallServicesInParallel.java))
+- Example: `[user: done, orders: none (service failed), offers: none (too slow)]` in about 500 ms
+- Idea: `supplyAsync` on your own thread pool, `exceptionally` for errors, `completeOnTimeout` for slow calls, then `CompletableFuture.allOf(...).join()`.
+
+**C68. Min stack** ([MinStack.java](../java/datastructures/MinStack.java))
+- Example: push 5, 3, 7 → the min is `3`; pop twice → the min is `5`
+- Idea: a second stack that holds the smallest value at each level, so `getMin()` is O(1).
+
+**C69. Queue using two stacks** ([QueueUsingTwoStacks.java](../java/datastructures/QueueUsingTwoStacks.java))
+- Example: add 1, 2, 3, then remove → `1`
+- Idea: push onto `in`. When `out` is empty, move everything from `in` to `out`. Each item moves only once, so it is O(1) on average.
+
+**C70. Change a list while looping over it** ([ModifyListWhileLooping.java](../java/datastructures/ModifyListWhileLooping.java))
+- Example: removing the even numbers from `[1, 2, 3, 4, 5, 6]` in a for-each loop throws `ConcurrentModificationException`. The safe ways give `[1, 3, 5]`.
+- Idea: `Iterator.remove()`, `removeIf()` (the simplest), or a `CopyOnWriteArrayList`. Trap: removing the second-last item gives no exception, and the last item is never checked.
+
+**C71. try-with-resources and a custom exception** ([TryWithResources.java](../java/exceptions/TryWithResources.java))
+- Example: prints `Close second`, then `Close first`, then `Caught: Empty payment on second`
+- Idea: any `AutoCloseable` is closed for you, in reverse order, before `catch` runs. If the try block threw and `close()` throws too, the exception from `close()` is kept as a suppressed exception.
+
+**C72. Generics: `? extends` and `? super`** ([GenericsWildcards.java](../java/oop/GenericsWildcards.java))
+- Idea: PECS: `? extends` to read, `? super` to add. Type erasure: at run time a `List<String>` and a `List<Integer>` are the same class.
+
+**C73. Reverse the words in a sentence** ([ReverseWords.java](../java/strings/ReverseWords.java))
+- Example: `"  Java   is fun "` → `"fun is Java"`. Follow-up (reverse each word): `"avaJ si nuf"`
+- Idea: `trim()` and `split("\\s+")`, then a loop from the end, or `Collections.reverse` and `String.join`.
+
+**C74. String rotation** ([StringRotation.java](../java/strings/StringRotation.java))
+- Example: `"waterbottle"` and `"erbottlewat"` → `true`
+- Idea: the same length, and `(s1 + s1).contains(s2)`.
+
+**C75. Duplicate words and the first repeated character** ([DuplicateWords.java](../java/strings/DuplicateWords.java))
+- Example: `"Java is fun and java is fast"` → `[java, is]`, and `"programming"` → `r`
+- Idea: `Set.add()` returns false when the item is already in the set.
+
+**C76. Fibonacci** ([Fibonacci.java](../java/numbers/Fibonacci.java))
+- Example: fib(10) = `55`, fib(50) = `12586269025`
+- Idea: a loop that keeps the last two numbers (O(n)). Plain recursion is O(2^n). Saving the answers (memoization) makes recursion O(n). `Stream.iterate` works on pairs.
+
+**C77. Prime, palindrome number, Armstrong number and factorial** ([ClassicNumberPrograms.java](../java/numbers/ClassicNumberPrograms.java))
+- Example: 29 is prime, 121 is a palindrome, 153 = 1³ + 5³ + 3³, and 25! = `15511210043330985984000000`
+- Idea: try divisors only up to the square root, reverse the digits, and use `BigInteger` because 21! doesn't fit in a `long`.
+
+**C78. Builder pattern** ([BuilderPattern.java](../java/design/BuilderPattern.java))
+- Example: `new User.Builder("Asha").email("asha@example.com").age(30).build()`
+- Idea: a private constructor that takes the builder, methods that set one value and return `this`, and checks in `build()`.
+
 ---
 
 ## Part 3: Spot the bug
@@ -718,6 +835,21 @@ The full answers are in [Questions.md](Questions.md); the key points below are t
 | A11 | G1 vs ZGC? | G1: the default GC; it splits the heap into regions and aims for pauses under 200 ms by default (`-XX:MaxGCPauseMillis`). ZGC: aims for pauses under a millisecond, even on huge heaps; generational since Java 21 (the default mode since Java 23). |
 | A12 | What is Kafka consumer rebalancing? | Eager: every consumer in the group gives up all its partitions and waits (the consumer group stops, not the cluster). Cooperative sticky: only the partitions that move are paused. Static membership (`group.instance.id`) avoids rebalances on restarts. |
 | A13 | What is the outbox pattern? | Save the business row and an "outbox" event row in the same DB transaction. A separate relay (a poller or Debezium) sends the events to Kafka. No events are lost or sent by mistake, but consumers must handle duplicates (at-least-once delivery). |
+| A14 | What are the common `@Transactional` mistakes? | Calls from the same class skip the proxy, private methods are ignored, checked exceptions don't roll back by default, and catching the exception makes it commit. `REQUIRED` joins the current transaction; `REQUIRES_NEW` starts a separate one. |
+| A15 | What is the JPA N+1 problem? | 1 query for N parents, then 1 more query per parent for a lazy collection. Fix it with `JOIN FETCH`, `@EntityGraph`, batch fetching or a DTO projection. |
+| A16 | Bean scopes and constructor injection? | `singleton` (the default), `prototype`, `request`, `session`. Constructor injection gives final fields, complete objects and easy tests. A prototype bean inside a singleton is created only once: use `ObjectProvider`. |
+| A17 | `synchronized` vs `ReentrantLock`? | Both lock and make changes visible. `ReentrantLock` adds `tryLock` with a timeout, waits that can be interrupted, a fair mode and conditions. Always unlock it in `finally`. |
+| A18 | What problems can `ThreadLocal` cause? | Pools reuse threads, so an old value leaks into the next request, and its memory is kept while the thread is alive. Always call `remove()` in `finally`. `ScopedValue` (Java 25) is safer. |
+| A19 | What are the JVM memory areas? | Heap (objects: `Java heap space`), stack (`StackOverflowError`), Metaspace (classes: `Metaspace`) and direct memory (NIO buffers). |
+| A20 | How do you find a memory leak? | The heap grows after every GC → take a heap dump with `jcmd` → open it in Eclipse MAT → fix the cause: a growing static collection or cache, a `ThreadLocal` never removed, or a resource never closed. |
+| A21 | How do you size a thread pool? | CPU-heavy work: about the number of cores. Work that waits: more threads (`cores × (1 + wait / CPU time)`). Use a bounded queue and a rejection policy, or virtual threads. |
+| A22 | How does class loading work? | Loading → linking → initialization, the first time a class is used. Bootstrap, Platform and Application loaders. Parent first, so core classes can't be replaced and a class the parent can load is loaded only once, by the parent. `ClassNotFoundException` (loading by name fails) vs `NoClassDefFoundError` (missing at run time, or its static init failed). |
+| A23 | `? extends` vs `? super`, and type erasure? | PECS: `extends` to read (producer), `super` to add (consumer). A `List<Integer>` is not a `List<Number>`. Erasure removes the generic types after compiling, so no `new T()` and no `instanceof List<String>` on an `Object`. |
+| A24 | Which design patterns does Spring use? | Singleton (one per container), Factory (`BeanFactory`, `@Bean`), Proxy (`@Transactional`, AOP), Template Method (`JdbcTemplate`), dependency injection, Observer (events), Strategy, Front Controller (`DispatcherServlet`) and Builder. |
+| A25 | What happens when Spring Boot starts? | `SpringApplication.run` → environment and properties → context → component scan → auto-configuration (`@ConditionalOnClass`, `@ConditionalOnMissingBean`) → beans created → embedded server → runners → `ApplicationReadyEvent`. `--debug` shows which auto-configurations ran. |
+| A26 | How do you make microservices resilient? | Timeouts on every call, a few retries with exponential backoff and jitter (only for safe calls), circuit breakers, bulkheads, fallbacks, and sagas with compensating actions instead of one big transaction. Library: Resilience4j. |
+| A27 | Moving to a newer Java: gains and risks? | Gains: shorter code, virtual threads, better GCs, long-term support, Spring Boot 3. Risks: removed Java EE modules, `javax` → `jakarta` (Spring Boot 3), locked JDK internals break old libraries, old build plugins. Upgrade libraries first, use `jdeps`, test under load. |
+| A28 | What is structured concurrency? | Subtasks started in a `StructuredTaskScope` must finish before the scope ends, and one failure cancels the others. Still a preview in Java 25, so use `CompletableFuture` for now. |
 
 ### System design in Questions.md
 
