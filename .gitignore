@@ -2,7 +2,8 @@
 *.class
 *.iml
 .idea/
-./Samples8.iml
+.classpath
+.project
 .slingshot/*
 target/
 .settings/
