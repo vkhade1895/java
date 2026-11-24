@@ -28,11 +28,7 @@ public class GroupAnagrams {
     private static void groupWithLoop(String[] input) {
         Map<String, List<String>> map = new HashMap<>();
         for (String s : input) {
-            // Words with the same letters get the same key after sorting: "eat" -> "aet"
-            char[] charArray = s.toCharArray();
-            Arrays.sort(charArray);
-            String sortedKey = String.valueOf(charArray);
-            map.computeIfAbsent(sortedKey, k -> new ArrayList<>()).add(s);
+            map.computeIfAbsent(sortedLetters(s), k -> new ArrayList<>()).add(s);
         }
         System.out.println("Grouped anagrams: " + new ArrayList<>(map.values()));
     }
@@ -40,12 +36,15 @@ public class GroupAnagrams {
     // The same idea with streams: groupingBy uses the sorted letters as the key
     private static void groupWithStreams(String[] input) {
         List<List<String>> groups = new ArrayList<>(Arrays.stream(input)
-                .collect(Collectors.groupingBy(word -> {
-                    char[] chars = word.toCharArray();
-                    Arrays.sort(chars);
-                    return new String(chars);
-                }))
+                .collect(Collectors.groupingBy(GroupAnagrams::sortedLetters))
                 .values());
         System.out.println("Grouped anagrams (streams): " + groups);
+    }
+
+    // Words with the same letters get the same key after sorting: "eat" -> "aet"
+    private static String sortedLetters(String word) {
+        char[] letters = word.toCharArray();
+        Arrays.sort(letters);
+        return new String(letters);
     }
 }

@@ -19,7 +19,10 @@ public class FindDuplicates {
     public static void main(String[] args) {
         int[] a = {1, 5, 8, 9, 3, 5, 7, 7, 8};
         Set<Integer> seen = new HashSet<>();
-        List<Integer> repeated = Arrays.stream(a).boxed().filter(e -> !seen.add(e)).toList();
+        List<Integer> repeated = Arrays.stream(a).boxed()
+                .filter(e -> !seen.add(e))
+                .distinct()     // a number that appears 3 or more times is listed only once
+                .toList();
         System.out.println("Repeated integers: " + repeated);
     }
 }

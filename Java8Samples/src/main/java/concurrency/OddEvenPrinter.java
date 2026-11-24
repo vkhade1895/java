@@ -40,7 +40,6 @@ public class OddEvenPrinter {
                     }
                 }
             }
-            LOCK.notify(); // all numbers are printed: wake the other thread so it can finish too
         }
     }
 }

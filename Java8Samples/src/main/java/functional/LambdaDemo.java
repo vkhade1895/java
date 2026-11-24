@@ -41,7 +41,7 @@ public class LambdaDemo {
         double addResult = addition.operate(5, 4);
         double subtractionResult = subtraction.operate(5, 4);
         double multiplicationResult = multiplication.operate(5, 4);
-        double divisionResult = division.operate(20, 4);
+        double divisionResult = division.operate(5, 2);
         System.out.println("Addition output: " + addResult);
         System.out.println("Subtraction output: " + subtractionResult);
         System.out.println("Multiplication output: " + multiplicationResult);

@@ -29,7 +29,7 @@
 
 **Answer:**
 - **No global lock:** Unlike `Hashtable` or synchronized maps, `ConcurrentHashMap` does not lock the entire table.
-- **Bucket-level locking:** In Java 8+, it uses fine-grained locking (`synchronized` on individual bucket head nodes) only when inserting new nodes into an occupied bucket.
+- **Bucket-level locking:** In Java 8+, when it changes a bucket that already has entries (add, update or remove a key), it locks only that bucket, with `synchronized` on the bucket's first node.
 - **CAS operations:** Non-blocking Compare-And-Swap instructions are used for insertion when a bucket is completely empty.
 - **Volatile reads:** Table nodes use volatile references to ensure read operations (like `get()`) are lock-free and always see the latest written data.
 

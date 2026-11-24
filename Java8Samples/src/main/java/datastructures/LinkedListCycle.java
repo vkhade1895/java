@@ -26,7 +26,7 @@ public class LinkedListCycle {
     }
 
     // Way 1: if we reach a node we have already seen, there is a loop
-    static boolean hasLoopUsingSet(Node head) {
+    private static boolean hasLoopUsingSet(Node head) {
         Set<Node> visited = new HashSet<>();
         Node current = head;
         while (current != null) {
@@ -39,7 +39,7 @@ public class LinkedListCycle {
     }
 
     // Way 2 (Floyd): slow moves 1 step, fast moves 2 steps. They can only meet inside a loop.
-    static boolean hasLoop(Node head) {
+    private static boolean hasLoop(Node head) {
         Node slow = head;
         Node fast = head;
         while (fast != null && fast.next != null) {

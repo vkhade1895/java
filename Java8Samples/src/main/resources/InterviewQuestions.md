@@ -70,7 +70,7 @@ A helper that belongs to the interface, like `static int positive(int a)`. Call 
 Default: yes. Static: no, because it isn't inherited. (A class can have its own static method with the same name, but it's a separate method.)
 
 **Q13. What is a functional interface?**
-An interface with exactly one abstract method. Default and static methods don't count, and neither do methods that `Object` already has (that's why `Comparator`, which declares `equals`, is still functional). Examples here: `MathOperation` (`operate`), `Calculator` (`calculate`) and `Checker` inside `FunctionalInterfaceDemo` (`check`). You can use a lambda anywhere a functional interface is expected.
+An interface with exactly one abstract method. Default and static methods don't count, and neither do methods that `Object` already has (that's why `Comparator`, which declares `equals`, is still functional). Examples here: `MathOperation` (`operate`) and `Calculator` (`calculate`). You can use a lambda anywhere a functional interface is expected.
 
 **Q14. What does `@FunctionalInterface` do? Is it required?**
 It's not required. It makes the compiler check that there is exactly one abstract method, so adding a second one becomes a compile error.
@@ -88,8 +88,8 @@ It's not required. It makes the compiler check that there is exactly one abstrac
 
 Older interfaces that are also functional: `Runnable`, `Callable`, `Comparator`.
 
-**Q16. How does `functional/FunctionalInterfaceDemo` use its `Checker` interface (abstract `check()`, default `speed()`, static `type()`)?**
-`Checker checker = () -> System.out.println("Calling abstract");` makes the lambda the body of `check()`. `checker.speed()` runs the default method, and `Checker.type()` runs the static one.
+**Q16. Can a lambda use the default method of its interface?**
+Yes. In `functional/InterfaceMethodsDemo`, `Calculator doubler = a -> a * 2;` makes the lambda the body of `calculate()`, and `doubler.sqrt(16)` still runs the default method. A static method is called on the interface instead: `Calculator.positive(10)`.
 
 ### 1.3 Lambdas and method references
 
@@ -286,7 +286,7 @@ It uses a `HashMap` inside, with the elements as keys. `add` returns `false` if 
 **Q64. `Arrays.asList` vs `List.of` vs `new ArrayList<>(...)`?**
 - `Arrays.asList(...)`: fixed size and backed by the array. `set` and `sort` work, but `add` and `remove` throw `UnsupportedOperationException`. Nulls are allowed.
 - `List.of(...)` (Java 9): can't be changed at all, and no nulls.
-- `new ArrayList<>(list)`: a normal copy you can change. That's why UncommonWords copies the lists before calling `removeAll`.
+- `new ArrayList<>(list)`: a normal copy you can change. Copy a list from `Arrays.asList` like this before you call `add`, `remove` or `removeAll` on it.
 
 **Q65. Why avoid `Stack`, and what should you use instead?**
 `Stack` is an old class built on `Vector`, and every method is synchronized, so it's slower. Use `Deque<Character> stack = new ArrayDeque<>();` with `push`, `pop` and `peek`.
@@ -408,9 +408,14 @@ It makes an empty future that some other code finishes later by calling `complet
 | Version | Features used here |
 |---|---|
 | Java 8 | lambdas, streams, method references, default and static interface methods, `Optional` |
-| Java 9 | `List.of` |
+| Java 9 | `List.of`, `Set.of` |
+| Java 10 | `var`, `List.copyOf` |
 | Java 11 | `String.repeat` |
-| Java 16 | records, `stream.toList()` |
+| Java 14 | switch expressions |
+| Java 15 | text blocks |
+| Java 16 | records, `stream.toList()`, `instanceof` with a variable |
+| Java 17 | sealed interfaces |
+| Java 21 | virtual threads, pattern matching for `switch`, record patterns, sequenced collections |
 
 The `pom.xml` compiles for Java 21.
 
@@ -421,7 +426,7 @@ The `pom.xml` compiles for Java 21.
 For a simple side-by-side guide to Java 8, 11, 17, 21 and 25 with code examples, see [JavaVersions.md](JavaVersions.md).
 
 **Q97. What's inside `pom.xml`?**
-`groupId` (the organisation), `artifactId` (the project name) and `version` (`1.0-SNAPSHOT` means "still in development"), plus properties: Java version 21 (`maven.compiler.source` and `maven.compiler.target`) and UTF-8 encoding. Common commands: `mvn compile`, `mvn test`, `mvn package`.
+`groupId` (the organisation), `artifactId` (the project name) and `version` (`1.0-SNAPSHOT` means "still in development"), plus properties: Java version 21 (`maven.compiler.release`, which also stops you from using methods that only newer Java versions have) and UTF-8 encoding. Common commands: `mvn compile`, `mvn test`, `mvn package`.
 
 ---
 
@@ -462,7 +467,7 @@ The array holds the numbers 1 to n with one missing.
 
 **C6. Find duplicate numbers** ([FindDuplicates.java](../java/arrays/FindDuplicates.java))
 - Example: `[1, 5, 8, 9, 3, 5, 7, 7, 8]` → `[5, 7, 8]`
-- Idea: `filter(e -> !seen.add(e))`. Collect into a Set if a number can appear 3 or more times.
+- Idea: `filter(e -> !seen.add(e))`, then `distinct()`, so a number that appears 3 or more times is listed once.
 
 **C7. Count how many times each number appears** ([CountOccurrences.java](../java/arrays/CountOccurrences.java))
 - Example: `[1, 2, 3, 2, 3, 1, 1]` → `{1=3, 2=2, 3=2}`
@@ -509,7 +514,7 @@ Ignore upper and lower case.
 Put words made of the same letters together.
 - Example: `["eat", "tea", "tan", "ate", "nat", "bat"]` → `[[eat, tea, ate], [tan, nat], [bat]]` (any order)
 - Idea: sort each word's letters to make a key, then `map.computeIfAbsent(key, k -> new ArrayList<>()).add(word)`. O(n · k log k).
-- With streams (`groupWithStreams`): `Collectors.groupingBy(word -> sortedLetters(word))` does the same grouping.
+- With streams (`groupWithStreams`): `Collectors.groupingBy(GroupAnagrams::sortedLetters)` does the same grouping.
 
 **C17. Are two words anagrams?** ([AnagramCheck.java](../java/strings/AnagramCheck.java))
 - Example: `"Race"` and `"Care"` → `true`
@@ -521,7 +526,7 @@ Put words made of the same letters together.
 
 **C19. Words that two sentences don't share** ([UncommonWords.java](../java/strings/UncommonWords.java))
 - Example: `"I live in A B"` and `"I live in "` → `[A, B]`
-- Idea: copy both word lists, call `removeAll` in both directions, and join what's left.
+- Idea: put each sentence's words in a `LinkedHashSet` (each word once, in order), call `removeAll` in both directions on copies, and join what's left.
 
 **C20. First character that doesn't repeat** ([FirstNonRepeatedCharacter.java](../java/strings/FirstNonRepeatedCharacter.java))
 - Example: `"swiss"` → `'w'`, and `"intervienw"` → `'t'`
@@ -591,7 +596,7 @@ Every `(`, `{` and `[` must be closed by the same type, in the right order.
 
 **C34. Reverse a linked list** ([ReverseLinkedList.java](../java/datastructures/ReverseLinkedList.java))
 - Example: `a → b → q → p` → `p → q → b → a`
-- Idea: `Collections.reverse(list)` for Java's `LinkedList`. For your own node class, use three pointers (`prev`, `curr`, `next`) in one loop.
+- Idea: `Collections.reverse(list)` for Java's `LinkedList`. For your own node class, use three pointers (`prev`, `curr`, `next`) in one loop (see C60, `SinglyLinkedList.reverse`).
 
 **C35. Print a matrix in spiral order** ([SpiralMatrix.java](../java/arrays/SpiralMatrix.java))
 - Example: the 4×4 matrix with 1 to 16 → `[1, 2, 3, 4, 8, 12, 16, 15, 14, 13, 9, 5, 6, 7, 11, 10]`
@@ -625,7 +630,7 @@ Build a cache with a fixed capacity. `get(key)` returns the value, or -1 if the 
 **C41. Names in upper case for salaries above 100** ([EmployeeStreamPractice.java](../java/streams/EmployeeStreamPractice.java))
 - Idea: `filter(e -> e.salary() > 100).map(e -> e.name().toUpperCase()).toList()`.
 
-More practice from the comments in SalaryStatistics: group employees by department, and count active vs inactive users (`partitioningBy`).
+Grouping by department and `partitioningBy` are shown in EmployeeGroupingAndSorting (C59).
 
 ### Concurrency
 

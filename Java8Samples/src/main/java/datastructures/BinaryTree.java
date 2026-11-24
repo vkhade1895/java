@@ -51,11 +51,13 @@ public class BinaryTree {
         System.out.println("Postorder (left, right, node): " + postorder); // [2, 4, 3, 7, 9, 8, 5]
         System.out.println("Level by level: " + levelOrder(root)); // [[5], [3, 8], [2, 4, 7, 9]]
         System.out.println("Height: " + height(root));                     // 3
-        System.out.println("Is a valid BST: " + isValidBst(root, Long.MIN_VALUE, Long.MAX_VALUE));
+        System.out.println("Is the tree above a valid BST? "
+                + isValidBst(root, Long.MIN_VALUE, Long.MAX_VALUE));      // true
 
         TreeNode notBst = new TreeNode(5);
         notBst.left = new TreeNode(6); // 6 is bigger than 5, so it can't be on the left
-        System.out.println("Is a valid BST: " + isValidBst(notBst, Long.MIN_VALUE, Long.MAX_VALUE));
+        System.out.println("Is 5 with 6 on its left a valid BST? "
+                + isValidBst(notBst, Long.MIN_VALUE, Long.MAX_VALUE));    // false
 
         System.out.println("Lowest common ancestor of 2 and 4: "
                 + lowestCommonAncestor(root, 2, 4).value);                // 3
@@ -63,7 +65,7 @@ public class BinaryTree {
                 + lowestCommonAncestor(root, 2, 9).value);                // 5
     }
 
-    static void inorder(TreeNode node, List<Integer> out) {
+    private static void inorder(TreeNode node, List<Integer> out) {
         if (node == null) {
             return;
         }
@@ -72,7 +74,7 @@ public class BinaryTree {
         inorder(node.right, out);
     }
 
-    static void preorder(TreeNode node, List<Integer> out) {
+    private static void preorder(TreeNode node, List<Integer> out) {
         if (node == null) {
             return;
         }
@@ -81,7 +83,7 @@ public class BinaryTree {
         preorder(node.right, out);
     }
 
-    static void postorder(TreeNode node, List<Integer> out) {
+    private static void postorder(TreeNode node, List<Integer> out) {
         if (node == null) {
             return;
         }
@@ -91,7 +93,7 @@ public class BinaryTree {
     }
 
     // Level by level with a queue (breadth-first search)
-    static List<List<Integer>> levelOrder(TreeNode root) {
+    private static List<List<Integer>> levelOrder(TreeNode root) {
         List<List<Integer>> levels = new ArrayList<>();
         Queue<TreeNode> queue = new ArrayDeque<>();
         if (root != null) {
@@ -116,7 +118,7 @@ public class BinaryTree {
     }
 
     // The number of levels: 1 + the height of the taller side
-    static int height(TreeNode node) {
+    private static int height(TreeNode node) {
         if (node == null) {
             return 0;
         }
@@ -124,8 +126,9 @@ public class BinaryTree {
     }
 
     // In a BST every node must be between the limits set by all the nodes above it,
-    // not only its parent
-    static boolean isValidBst(TreeNode node, long min, long max) {
+    // not only its parent. The limits are long, so a node that holds Integer.MIN_VALUE or
+    // Integer.MAX_VALUE is still strictly inside them.
+    private static boolean isValidBst(TreeNode node, long min, long max) {
         if (node == null) {
             return true;
         }
@@ -137,7 +140,7 @@ public class BinaryTree {
 
     // The lowest node that has both a and b below it (a node also counts as below itself).
     // It assumes both a and b are in the tree. If only one is there, it returns that node.
-    static TreeNode lowestCommonAncestor(TreeNode node, int a, int b) {
+    private static TreeNode lowestCommonAncestor(TreeNode node, int a, int b) {
         if (node == null || node.value == a || node.value == b) {
             return node;
         }

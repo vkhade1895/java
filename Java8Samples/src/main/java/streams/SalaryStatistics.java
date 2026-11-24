@@ -14,11 +14,6 @@ import java.util.stream.Collectors;
  */
 public class SalaryStatistics {
 
-    // Practice ideas:
-    // - Group a list of employees by department.
-    // - Calculate the average salary of employees overall, or group them by gender.
-    // - Count active vs. inactive users in a collection.
-    // - Find the sum of all salaries using reduce().
     public static void main(String[] args) {
         List<Worker> workers = List.of(
                 new Worker("Male", 100),

@@ -2,10 +2,11 @@ package functional;
 
 /**
  * Calls the three kinds of interface methods in {@link Calculator}: abstract, default and static.
+ * Then it implements Calculator with a lambda, which still gets the default method.
  *
- * <p>Keywords: interface, abstract method, default method, static method, implements.
+ * <p>Keywords: interface, abstract method, default method, static method, implements, lambda.
  *
- * <p>First written: 2023-10-23 (old location: {@code samples.InterfaceTests}).
+ * <p>First written: 2023-10-23 and 2026-11-25 (old location: {@code samples.InterfaceTests}).
  */
 public class InterfaceMethodsDemo implements Calculator {
 
@@ -22,6 +23,12 @@ public class InterfaceMethodsDemo implements Calculator {
 
         int square = demo.calculate(input); // abstract method: implemented below
         System.out.println("Square: " + square);
+
+        // A lambda can implement Calculator too: the lambda is the body of calculate(),
+        // and the object still gets the default method sqrt().
+        Calculator doubler = a -> a * 2;
+        System.out.println("Lambda calculate(5): " + doubler.calculate(5));       // 10
+        System.out.println("Default sqrt(16) on the lambda: " + doubler.sqrt(16)); // 4.0
     }
 
     @Override

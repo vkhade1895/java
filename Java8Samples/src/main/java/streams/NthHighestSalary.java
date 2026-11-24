@@ -33,7 +33,7 @@ public class NthHighestSalary {
                 .sorted(Comparator.reverseOrder())
                 .skip(n - 1)
                 .findFirst();
-        System.out.println("2nd highest salary: " + nthSalary.orElse(null)); // 700
+        System.out.println("Highest salary number " + n + ": " + nthSalary.orElse(null)); // 700
 
         // More than one person can earn that salary
         List<String> earners = employees.stream()

@@ -34,12 +34,9 @@ public class HighestPaidByDepartment {
                         Collectors.maxBy(Comparator.comparing(Employee::salary))
                 ));
 
-        // Print only the department, employee name and salary
-        highestPaid.forEach((department, employee) -> {
-            if (employee.isPresent()) {
-                Employee e = employee.get();
-                System.out.println(department.name() + ": " + e.name() + " " + e.salary());
-            }
-        });
+        // Print only the department, employee name and salary.
+        // maxBy gives an Optional, and ifPresent runs only when it has a value.
+        highestPaid.forEach((department, highest) -> highest.ifPresent(
+                e -> System.out.println(department.name() + ": " + e.name() + " " + e.salary())));
     }
 }

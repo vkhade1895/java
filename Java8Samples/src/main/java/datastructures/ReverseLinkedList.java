@@ -17,8 +17,8 @@ public class ReverseLinkedList {
         List<String> list = new LinkedList<>(List.of("a", "b", "q", "p"));
         System.out.println("Original linked list: " + list);
         Collections.reverse(list);
-        // For your own Node class: walk once with three pointers (prev, curr, next)
-        // and point each node back to prev.
+        // For your own Node class, see SinglyLinkedList.reverse(): it walks once with three
+        // pointers (prev, curr, next) and points each node back to the one before it.
         System.out.println("Reversed linked list: " + list);
     }
 }

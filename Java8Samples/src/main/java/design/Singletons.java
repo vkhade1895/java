@@ -44,8 +44,9 @@ public class Singletons {
         }
     }
 
-    // Way 3: enum. The simplest. It is also safe against reflection and serialization tricks
-    // that can create a second object of the other two kinds.
+    // Way 3: enum. The simplest. Reflection and serialization can't make a second object of it.
+    // (Reflection can make a second object of the other two kinds. Serialization can too, but
+    // only if the class is Serializable and has no readResolve() method.)
     enum EnumSingleton {
         INSTANCE;
 

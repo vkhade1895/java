@@ -31,7 +31,7 @@ public class SinglyLinkedList {
     }
 
     // Walk once and turn each arrow around, so every node points to the one before it
-    static Node reverse(Node head) {
+    private static Node reverse(Node head) {
         Node prev = null;
         Node curr = head;
         while (curr != null) {
@@ -44,7 +44,7 @@ public class SinglyLinkedList {
     }
 
     // Reverse the rest of the list first, then put this node at its end
-    static Node reverseRecursive(Node head) {
+    private static Node reverseRecursive(Node head) {
         if (head == null || head.next == null) {
             return head;
         }
@@ -56,7 +56,7 @@ public class SinglyLinkedList {
 
     // slow moves 1 step, fast moves 2 steps. When fast reaches the end, slow is in the middle.
     // If the list has an even length, slow stops at the second of the two middle nodes.
-    static Node middle(Node head) {
+    private static Node middle(Node head) {
         Node slow = head;
         Node fast = head;
         while (fast != null && fast.next != null) {
@@ -69,7 +69,7 @@ public class SinglyLinkedList {
     // Move "ahead" n steps first, then move both pointers until "ahead" reaches the end.
     // "behind" then stops just before the node to remove. The dummy node in front
     // makes removing the first node work the same way.
-    static Node removeNthFromEnd(Node head, int n) {
+    private static Node removeNthFromEnd(Node head, int n) {
         Node dummy = new Node(0);
         dummy.next = head;
         Node ahead = dummy;
@@ -86,7 +86,7 @@ public class SinglyLinkedList {
     }
 
     // Builds a list from the given values, for example 1 -> 2 -> 3
-    static Node build(int... values) {
+    private static Node build(int... values) {
         Node dummy = new Node(0);
         Node tail = dummy;
         for (int value : values) {
@@ -96,7 +96,7 @@ public class SinglyLinkedList {
         return dummy.next;
     }
 
-    static String text(Node head) {
+    private static String text(Node head) {
         StringBuilder result = new StringBuilder();
         for (Node node = head; node != null; node = node.next) {
             result.append(node.value);

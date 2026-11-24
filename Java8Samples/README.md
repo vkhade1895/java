@@ -20,7 +20,7 @@ java -cp target/classes arrays.TwoSum
 | Package | What's inside |
 |---|---|
 | [`oop`](#oop) | Object-oriented basics: inheritance, overriding, abstract classes, overloading, immutable classes, generics (8 classes) |
-| [`functional`](#functional) | Java 8 interfaces: default and static methods, functional interfaces, lambdas, method references (6 classes) |
+| [`functional`](#functional) | Java 8 interfaces: default and static methods, functional interfaces, lambdas, method references (5 classes) |
 | [`modern`](#modern) | Newer Java (10 to 21): var, switch expressions, text blocks, records, sealed interfaces, pattern matching, sequenced collections (4 classes) |
 | [`streams`](#streams) | Stream API: reduce, groupingBy, flatMap, sorting maps, employee examples (10 classes) |
 | [`arrays`](#arrays) | Array problems (including the spiral matrix) (14 classes) |
@@ -52,8 +52,7 @@ java -cp target/classes arrays.TwoSum
 | Class | What it shows | Keywords | First written | Old name |
 |---|---|---|---|---|
 | [Calculator](src/main/java/functional/Calculator.java) | A functional interface: exactly one abstract method, plus a default and a static method. | functional interface, default method, static interface method, Java 8 | 2023-10-23 | `samples.I1` |
-| [FunctionalInterfaceDemo](src/main/java/functional/FunctionalInterfaceDemo.java) | A lambda implements a functional interface that also has a default and a static method. | functional interface, lambda, default method, static method | 2023-01-05 | `testers.I1` and `testers.Main` |
-| [InterfaceMethodsDemo](src/main/java/functional/InterfaceMethodsDemo.java) | Calls the three kinds of interface methods in `Calculator`: abstract, default and static. | interface, abstract method, default method, static method, implements | 2023-10-23 | `samples.InterfaceTests` |
+| [InterfaceMethodsDemo](src/main/java/functional/InterfaceMethodsDemo.java) | Calls the three kinds of interface methods in `Calculator`: abstract, default and static. Then it implements Calculator with a lambda, which still gets the default method. | interface, abstract method, default method, static method, implements, lambda | 2023-10-23, 2026-11-25 | `samples.InterfaceTests` |
 | [LambdaDemo](src/main/java/functional/LambdaDemo.java) | Sorting with an anonymous class vs a lambda, and lambdas that implement the custom functional interface `MathOperation`. | lambda expression, anonymous class, Comparator, method reference | 2025-10-21 | `samples.LambdaExample` |
 | [MathOperation](src/main/java/functional/MathOperation.java) | A custom functional interface: one abstract method, so a lambda can implement it. | `@FunctionalInterface`, custom functional interface, lambda target type | 2025-10-21 | `samples.MyFunctionalInterface` |
 | [MethodReferenceDemo](src/main/java/functional/MethodReferenceDemo.java) | Method reference example: `Integer::parseInt` is a short way to write `s -> Integer.parseInt(s)`. | method reference, `Function<T, R>`, static method reference | 2025-10-21 | `samples.MethodReferences` |
@@ -121,7 +120,7 @@ java -cp target/classes arrays.TwoSum
 | [ReverseString](src/main/java/strings/ReverseString.java) | Reverse a string. | StringBuilder, loop from the end, String immutability | 2026-01-24 | `testers.Basic` |
 | [ReverseWords](src/main/java/strings/ReverseWords.java) | Reverse the order of the words in a sentence ("Java is fun" becomes "fun is Java"), and the follow-up: reverse the letters of each word but keep the word order. | reverse words, split on spaces, trim, StringBuilder, Collections.reverse, String.join, Collectors.joining | 2026-11-24 | - |
 | [StringRotation](src/main/java/strings/StringRotation.java) | Check if one string is a rotation of another: "erbottlewat" is "waterbottle" rotated. | string rotation, s1 + s1 trick, contains, length check | 2026-11-24 | - |
-| [UncommonWords](src/main/java/strings/UncommonWords.java) | The words that appear in only one of two sentences. | List.removeAll, symmetric difference, copy before changing a list | 2023-01-05 | `testers.Q` |
+| [UncommonWords](src/main/java/strings/UncommonWords.java) | The words that appear in only one of two sentences. | LinkedHashSet, removeAll, symmetric difference, copy before changing a set | 2023-01-05 | `testers.Q` |
 | [UniqueCharactersInOrder](src/main/java/strings/UniqueCharactersInOrder.java) | The unique characters of a string, in the order they first appear. | HashSet, filter(set::add), encounter order, Stream.distinct | 2025-10-21 | `testers.Occurrences` |
 | [WordCount](src/main/java/strings/WordCount.java) | Count how many times each word appears in a sentence. | split, HashMap.getOrDefault, word frequency, case-sensitive | 2025-10-21 | `testers.Test1` |
 
